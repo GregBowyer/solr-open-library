@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="editions" version="1.5">
+  <types>
+    <fieldType name="string" class="solr.StrField" 
+        stored="true" indexed="true" sortMissingLast="true" />
+
+    <fieldType name="int" class="solr.TrieIntField" 
+        stored="true" indexed="true" precisionStep="0" positionIncrementGap="0"/>
+
+    <fieldType name="long" class="solr.TrieLongField" 
+        stored="true" indexed="true" precisionStep="0" positionIncrementGap="0"/>
+
+    <fieldType name="tint" class="solr.TrieIntField" 
+        stored="true" indexed="true" precisionStep="8" positionIncrementGap="0"/>
+
+    <fieldType name="date" class="solr.TrieDateField" 
+            precisionStep="0" positionIncrementGap="0" stored="true" indexed="true" />
+
+    <fieldType name="tdate" class="solr.TrieDateField" 
+        stored="true" indexed="true" precisionStep="6" positionIncrementGap="0"/>
+
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <fieldType name="textgen" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="0"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.StopFilterFactory"
+                ignoreCase="true"
+                words="stopwords.txt"
+                enablePositionIncrements="true"
+                />
+        <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="0"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+
+    <!-- since fields of this type are by default not stored or indexed,
+         any data added to them will be ignored outright.  --> 
+    <fieldtype name="ignored" stored="false" indexed="false" multiValued="true" class="solr.StrField" /> 
+ </types>
+
+ <fields>
+    <field name="key"                   type="string" required="true" />
+    <field name="work_titles"           type="text" multiValued="true" />
+    <field name="work_title"            indexed="false" stored="false" type="text" multiValued="true" />
+    <copyField source="work_title" dest="work_titles" />
+    <field name="title"                 type="text" />
+    <field name="other_titles"          type="text" multiValued="true" />
+    <field name="title_prefix"          type="text" />
+    <field name="subtitle"              type="text" /> 
+    <field name="by_statement"          type="string" /> 
+    <field name="authors"               type="string" multiValued="true" /> 
+    <field name="uris"                  type="string" indexed="false" multiValued="true" /> 
+    <field name="url"                   type="string" indexed="false" multiValued="true" /> 
+    <field name="publish_date"          type="string" />
+    <field name="publish_year"          type="tint" />
+    <field name="created"               type="string" />
+    <field name="copyright_date"        type="string" />
+    <field name="copyright_year"        type="tint" />
+    <field name="edition_name"          type="text" />
+    <field name="languages"             type="string" multiValued="true"/>
+    <field name="description"           type="text" />
+    <field name="notes"                 type="text" />
+    <field name="genres"                type="text" multiValued="true"/>
+    <field name="table_of_content"      type="text" multiValued="true"/>
+    <field name="works"                 type="string" multiValued="true"/>
+    <field name="covers"                type="string" multiValued="true"/>
+    <field name="series"                type="text" multiValued="true"/>
+    <field name="physical_dimensions"   type="text" />
+    <field name="physical_format"       type="string" />
+    <field name="number_of_pages"       type="int" default="0" />
+    <field name="subjects"              type="text" multiValued="true" />
+    <field name="subject_place"         type="string" multiValued="true" />
+    <field name="subject_time"          type="string" multiValued="true" />
+    <field name="pagination"            type="text" />
+
+    <!-- Library of Congress Control Number -->
+    <field name="lccn"                  type="string" multiValued="true" />
+    <field name="ia"                    type="string" />
+    <field name="ia_box_id"             type="string" multiValued="true" />
+    <field name="ia_loaded_id"          type="string" />
+    <field name="ocaid"                 type="string" />
+    <field name="oclc_numbers"          type="string" multiValued="true" />
+    <field name="isbn_10"               type="string" multiValued="true" />
+    <field name="isbn_13"               type="string" multiValued="true" />
+    <field name="dewey_decimal_class"   type="text" multiValued="true" />
+    <field name="lc_classifications"    type="text" multiValued="true" />
+    <field name="librarything"          type="int" />
+    <field name="goodreads"             type="int" multiValued="true" />
+    <!-- There are amazon id's in here :D -->
+    <field name="source_records"        type="string" multiValued="true" />
+
+    <field name="contributions"         type="textgen" multiValued="true" />
+    <field name="publish_places"        type="textgen" multiValued="true" />
+    <field name="publish_country"       type="string" />
+    <field name="publishers"            type="text" multiValued="true"/>
+    <field name="first_sentence"        type="text" />
+    <field name="weight"                type="text" />
+    <field name="volume_count"          type="int" />
+
+    <field name="revision"        type="int" />
+    <field name="latest_revision" type="int" />
+    <field name="last_modified"   type="date" />
+
+    <field name="type"   type="ignored" />
+    <field name="uri_descriptions"   type="ignored" />
+
+    <dynamicField name="attr_*" type="text" indexed="true" stored="true" multiValued="true"/>
+    <dynamicField name="*" type="text" indexed="true" stored="true" multiValued="true"/>
+ </fields>
+
+ <uniqueKey>key</uniqueKey>
+</schema>
